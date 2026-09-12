@@ -1,3 +1,4 @@
+/*
 .topbar {
   display: flex; justify-content: space-between; align-items: center;
   padding: 1rem 2rem; background: var(--surface);
@@ -56,3 +57,4 @@ dialog input {
 }
 .modal-actions { display: flex; gap: .5rem; justify-content: flex-end; margin-top: 1rem; }
 .preview-body img { width: 100%; max-height: 60vh; object-fit: contain; border-radius: var(--radius); }   
+*/
