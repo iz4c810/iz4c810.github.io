@@ -1,3 +1,4 @@
+/*
 const ui = {
   openUpload() { document.getElementById('upload-modal').showModal(); },
 
@@ -24,3 +25,4 @@ const ui = {
     `).join('') || '<p style="padding:2rem">No wallpapers yet. Click "+ Add" to start.</p>';
   }
 };   
+*/
