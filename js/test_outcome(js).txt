@@ -1,0 +1,2 @@
+Outcome = Useless
+NOTE = DO NOT EDIT, webpage will break
