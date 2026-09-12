@@ -1,3 +1,4 @@
+/*
 const wallpaper = {
   KEY: 'wb-wallpapers',
   _items: [],
@@ -57,3 +58,4 @@ const wallpaper = {
     ));
   }
 };   
+*/
