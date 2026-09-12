@@ -1,1 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Webpage with Theming</title>
+    <style>
+        /* CSS Theming with Custom Properties */
+        :root {
+            --primary-color: #4070f4;
+            --bg-color: #f0f0f0;
+            --text-color: #24292d;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
+        /* Dark Theme Overrides */
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --card-bg: #2c2c2c;
+            --shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        button.action-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        button.action-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My Styled Page</h1>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+        </nav>
+    </header>
+
+    <main id="home">
+        <div class="card">
+            <h2>Welcome</h2>
+            <p>This webpage demonstrates <strong>CSS custom properties</strong> for theming and <strong>inline JavaScript handlers</strong> for interactivity.</p>
+            <button class="action-btn" onclick="showAlert()">Click Me</button>
+        </div>
+
+        <div class="card" id="about">
+            <h2>About This Page</h2>
+            <p>Clicking the "Toggle Theme" button uses JavaScript to switch the <code>data-theme</code> attribute on the HTML tag, which updates the CSS variables instantly.</p>
+        </div>
+    </main>
+
+    <script>
+        // Inbuilt JavaScript Handler for Theme Switching
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                html.setAttribute('data-theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // Inbuilt JavaScript Handler for Button Click
+        function showAlert() {
+            alert('Hello! You clicked the button. This is a basic JS interaction.');
+        }
+    </script>
+
+</body>
+</html>   
