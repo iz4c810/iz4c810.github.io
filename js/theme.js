@@ -1,3 +1,4 @@
+/*
 const theme = {
   toggle() {
     const html = document.documentElement;
@@ -10,3 +11,4 @@ const theme = {
     document.documentElement.dataset.theme = saved;
   }
 };   
+*/
