@@ -4,15 +4,112 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wallpaper Base</title>
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/theme.css">
-  <link rel="stylesheet" href="css/components.css">
+  <style>
+    /* ===== Reset & Variables ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #4070f4;
+      --danger: #e5484d;
+      --radius: 10px;
+      --shadow: 0 4px 12px rgba(0,0,0,.08);
+      --transition: .25s ease;
+    }
+
+    /* ===== Themes ===== */
+    [data-theme="light"] {
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --text: #1a1a2e;
+      --border: #e0e0e0;
+    }
+    [data-theme="dark"] {
+      --bg: #121218;
+      --surface: #1e1e2a;
+      --text: #e4e4ef;
+      --border: #2e2e3e;
+    }
+
+    /* ===== Base ===== */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--text);
+      transition: background var(--transition), color var(--transition);
+      min-height: 100vh;
+    }
+
+    /* ===== Topbar ===== */
+    .topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .topbar h1 { font-size: 1.2rem; }
+
+    /* ===== Toolbar ===== */
+    .toolbar { display: flex; gap: .75rem; padding: 1.5rem 2rem 0; flex-wrap: wrap; }
+    .toolbar input, .toolbar select {
+      padding: .5rem .75rem; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      font-size: .9rem;
+    }
+    .toolbar input { flex: 1; min-width: 180px; }
+
+    /* ===== Grid & Cards ===== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem; padding: 1.5rem 2rem;
+    }
+    .card {
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); cursor: pointer;
+      transition: transform .2s; background: var(--surface);
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; }
+    .card .label {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: .5rem; background: linear-gradient(transparent, rgba(0,0,0,.7));
+      color: #fff; font-size: .85rem;
+    }
+
+    /* ===== Buttons ===== */
+    button {
+      background: var(--primary); color: #fff; border: none;
+      padding: .5rem 1rem; border-radius: var(--radius); cursor: pointer;
+      transition: opacity .15s; font-size: .9rem;
+    }
+    button:hover { opacity: .85; }
+    button.danger { background: var(--danger); }
+    button.theme-toggle { background: rgba(128,128,128,.25); }
+
+    /* ===== Modals ===== */
+    dialog {
+      border: none; border-radius: var(--radius);
+      background: var(--surface); color: var(--text);
+      padding: 1.5rem; box-shadow: var(--shadow);
+      max-width: 500px; width: 90%;
+    }
+    dialog::backdrop { background: rgba(0,0,0,.4); }
+    dialog input, dialog select {
+      display: block; width: 100%; margin: .5rem 0;
+      padding: .5rem; border-radius: var(--radius);
+      border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    }
+    .modal-actions { display: flex; gap: .5rem; justify-content: flex-end; margin-top: 1rem; }
+    .preview-body img { width: 100%; max-height: 60vh; object-fit: contain; border-radius: var(--radius); }
+    .empty { padding: 2rem; text-align: center; opacity: .6; }
+  </style>
 </head>
 <body>
 
   <header class="topbar">
-    <h1>Wallpaper Base</h1>
-    <nav>
+    <h1>🖼️ Wallpaper Base</h1>
+    <nav style="display:flex;gap:.5rem;">
       <button onclick="ui.openUpload()">+ Add</button>
       <button class="theme-toggle" onclick="theme.toggle()">Toggle Theme</button>
     </nav>
@@ -20,8 +117,8 @@
 
   <main>
     <div class="toolbar">
-      <input type="text" id="search" placeholder="Search wallpapers…" oninput="ui.filter(this.value)">
-      <select id="sort" onchange="wallpaper.sort(this.value)">
+      <input type="text" id="search" placeholder="Search wallpapers…" oninput="wallpaper.filter(this.value)">
+      <select onchange="wallpaper.sort(this.value)">
         <option value="newest">Newest</option>
         <option value="oldest">Oldest</option>
         <option value="name">Name A–Z</option>
@@ -33,7 +130,7 @@
   <!-- Upload Modal -->
   <dialog id="upload-modal">
     <form method="dialog" onsubmit="wallpaper.add(event)">
-      <h2>Add Wallpaper</h2>
+      <h2 style="margin-bottom:.5rem;">Add Wallpaper</h2>
       <input type="text" name="title" placeholder="Title" required>
       <input type="text" name="tags" placeholder="Tags (comma-separated)">
       <input type="file" name="image" accept="image/*" required>
@@ -48,7 +145,7 @@
   <dialog id="preview-modal">
     <div class="preview-body">
       <img id="preview-img" src="" alt="">
-      <p id="preview-meta"></p>
+      <p id="preview-meta" style="margin:.75rem 0;"></p>
       <div class="modal-actions">
         <button onclick="ui.closePreview()">Close</button>
         <button class="danger" onclick="wallpaper.delete()">Delete</button>
@@ -56,9 +153,106 @@
     </div>
   </dialog>
 
-  <script src="js/theme.js"></script>
-  <script src="js/wallpaper.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/app.js"></script>
+  <script>
+    /* ===== Theme ===== */
+    const theme = {
+      toggle() {
+        const html = document.documentElement;
+        const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
+        html.dataset.theme = next;
+        localStorage.setItem('wb-theme', next);
+      },
+      init() {
+        document.documentElement.dataset.theme =
+          localStorage.getItem('wb-theme') || 'light';
+      }
+    };
+
+    /* ===== Wallpaper Store ===== */
+    const wallpaper = {
+      KEY: 'wb-wallpapers',
+      _items: [],
+      _currentId: null,
+
+      init() {
+        this._items = JSON.parse(localStorage.getItem(this.KEY) || '[]');
+      },
+      _save() {
+        localStorage.setItem(this.KEY, JSON.stringify(this._items));
+      },
+      add(event) {
+        const form = event.target;
+        const file = form.image.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this._items.unshift({
+            id: Date.now(),
+            title: form.title.value,
+            tags: form.tags.value.split(',').map(t => t.trim()).filter(Boolean),
+            src: e.target.result,
+            added: new Date().toISOString()
+          });
+          this._save();
+          ui.render();
+          form.reset();
+        };
+        reader.readAsDataURL(file);
+      },
+      delete() {
+        this._items = this._items.filter(w => w.id !== this._currentId);
+        this._save();
+        ui.closePreview();
+        ui.render();
+      },
+      get(id) { return this._items.find(w => w.id === id); },
+      sort(mode) {
+        if (mode === 'newest') this._items.sort((a,b) => b.added - a.added);
+        if (mode === 'oldest') this._items.sort((a,b) => a.added - b.added);
+        if (mode === 'name')   this._items.sort((a,b) => a.title.localeCompare(b.title));
+        ui.render();
+      },
+      filter(query) {
+        const q = query.toLowerCase();
+        ui.render(this._items.filter(w =>
+          w.title.toLowerCase().includes(q) ||
+          w.tags.some(t => t.toLowerCase().includes(q))
+        ));
+      }
+    };
+
+    /* ===== UI ===== */
+    const ui = {
+      openUpload() { document.getElementById('upload-modal').showModal(); },
+      closePreview() { document.getElementById('preview-modal').close(); },
+      openPreview(id) {
+        const w = wallpaper.get(id);
+        if (!w) return;
+        wallpaper._currentId = id;
+        document.getElementById('preview-img').src = w.src;
+        document.getElementById('preview-meta').textContent =
+          `${w.title}  ·  ${w.tags.join(', ') || 'no tags'}  ·  ${new Date(w.added).toLocaleDateString()}`;
+        document.getElementById('preview-modal').showModal();
+      },
+      render(items) {
+        const list = items || wallpaper._items;
+        const grid = document.getElementById('gallery');
+        grid.innerHTML = list.length
+          ? list.map(w => `
+            <div class="card" onclick="ui.openPreview(${w.id})">
+              <img src="${w.src}" alt="${w.title}" loading="lazy">
+              <span class="label">${w.title}</span>
+            </div>`).join('')
+          : '<p class="empty">No wallpapers yet. Click "+ Add" to start.</p>';
+      }
+    };
+
+    /* ===== Init ===== */
+    document.addEventListener('DOMContentLoaded', () => {
+      theme.init();
+      wallpaper.init();
+      ui.render();
+    });
+  </script>
 </body>
 </html>   
