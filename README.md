@@ -17,3 +17,4 @@ Create an issue, upload the file or add the file contents to the issue and make 
 
 ## Easter Eggs
 1. `ls -a`, that shows a hidden file, run `cat ` with the filename trailing behind to show the text
+2. `01010111 01100101 01101100 01100011 01101111 01101101 01100101` stands for `"Welcome"`
