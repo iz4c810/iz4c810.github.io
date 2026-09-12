@@ -69,7 +69,9 @@ set art_lines \
     '   ~~~~    ' \
     '           ' \
     ' swimming  ' \
-    ' since boot'
+    ' since boot' \
+    ' and hiding' \
+    ' things    '
 
 # ---- info rows -----------------------------------------------------------
 set info_labels User Host OS Kernel Uptime Shell Packages CPU Memory Terminal Time
