@@ -1,0 +1,80 @@
+#!/usr/bin/fish
+# ==========================================================
+# Update Helper
+# ==========================================================
+
+# +-------------------------------------------------------+
+# | this script requires the following in config file     |
+# | "abbr sysupd '~/.local/bin/update"                    |
+# |                         OR                            |
+# | "alias sysupd='~/.local/bin/update'                   |
+# +-------------------------------------------------------+
+
+# ==========================================================
+# This script automates the update process for systems that
+# run arch or fedora based distros. it detects the OS by
+# checking which package manager is present (pacman/dnf)
+# rather than matching the exact distro name, so derivatives
+# like Manjaro, EndeavourOS, or Nobara are covered too. it
+# runs the correct update command, i recommend running this
+# without sudo, it prompts as needed, if anything goes wrong
+# email me at izc7050@gmail.com
+# ==========================================================
+echo "Testing OS Release"
+
+# Read /etc/os-release into fish variables (ID, VERSION_ID, etc.)
+# Still used for version checks and status messages, just not
+# as the sole way of deciding which distro family we're on.
+if test -f /etc/os-release
+    for line in (cat /etc/os-release)
+        set -l key (string split -m1 "=" $line)[1]
+        set -l val (string split -m1 "=" $line)[2] | string trim -c '"'
+        set -gx os_release_$key $val
+    end
+else
+    echo "Could not find /etc/os-release; cannot detect OS."
+    exit 1
+end
+
+# =============
+# Update System
+# =============
+
+
+# -------------
+# Arch-based
+# -------------
+if type -q pacman
+    echo "Detected Arch-based system ($os_release_ID, pacman found). Running Serpantinum update script."
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/ilyamiro/serpantinum/master/install/install.sh)"
+    exit 0
+end
+
+# -------------
+# Fedora-based
+# -------------
+if type -q dnf
+    echo "Detected Fedora-based system ($os_release_ID, dnf found). Running dnf update."
+    set -l fedora_version $os_release_VERSION_ID
+
+    # Accept Fedora 40 and newer instead of hardcoding one version
+    if test "$fedora_version" -ge 40
+        sudo dnf update -y
+        exit 0
+    else
+        echo "This script is intended for Fedora 40 or newer (found $fedora_version). Exiting."
+        exit 1
+    end
+end
+
+# -------------
+# Debian-based
+# -------------
+if type -q apt
+    echo "Detected Debian-based system ($os_release_ID, apt found). Running apt update."
+    sudo apt update && sudo apt upgrade -y
+    exit 0
+end
+
+echo "This script is intended for Arch, Fedora, or Debian-based systems, but detected $os_release_ID. Exiting."
+exit 2
